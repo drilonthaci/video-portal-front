@@ -20,7 +20,7 @@ select:focus {
 }
 
 
-/* For Tailwind  */
+/* For Tailwind */ 
 .hoveres{
     @apply hidden;
 }
