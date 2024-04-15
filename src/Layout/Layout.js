@@ -1,5 +1,5 @@
 import React from 'react';
-import Footer from './Footer/Footer';
+// import Footer from './Footer/Footer';
 import NavBar from './Navbar/NavBar';
 
 function Layout({children}) {
@@ -9,7 +9,7 @@ function Layout({children}) {
       <div className='bg-main text-white'>
         <NavBar/>
         {children}
-        <Footer/>
+        {/* <Footer/> */}
     </div>
     </>
   )
