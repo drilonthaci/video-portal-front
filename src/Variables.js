@@ -1,3 +1,3 @@
 export const variables={
-    API_URL : "https://localhost:7077/api"
+    API_URL : "http://localhost:5180/api"
 }
