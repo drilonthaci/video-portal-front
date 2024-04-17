@@ -1,6 +1,6 @@
 
 import React, { Component } from "react";
-import {variables} from '../../../Variables';
+import { variables } from '../../../Variables';
 import { PencilIcon, TrashIcon, PlusIcon } from "@heroicons/react/24/solid";
 import { IconButton, Tooltip } from "@material-tailwind/react";
 import { Link } from "react-router-dom";
@@ -74,43 +74,43 @@ class AddCategoryModal extends Component {
             },
             body: JSON.stringify({ name, shortDescription, imageUrl }),
         })
-        .then(response => {
-            if (!response.ok) {
-                throw new Error('Failed to add category');
-            }
-            return response.json();
-        })
-        .then(data => {
-            this.props.onCategoryAdded(data);
-            this.setState({ name: "", shortDescription: "", imageUrl: "" });
-        })
-        .catch(error => console.error("Error adding category:", error));
+            .then(response => {
+                if (!response.ok) {
+                    throw new Error('Failed to add category');
+                }
+                return response.json();
+            })
+            .then(data => {
+                this.props.onCategoryAdded(data);
+                this.setState({ name: "", shortDescription: "", imageUrl: "" });
+            })
+            .catch(error => console.error("Error adding category:", error));
     }
 
     render() {
         return (
             <div className="modal">
                 <div className="modal-content">
-                    <input 
-                        type="text" 
+                    <input
+                        type="text"
                         name="name"
-                        value={this.state.name} 
-                        onChange={this.handleChange} 
-                        placeholder="Category Name" 
+                        value={this.state.name}
+                        onChange={this.handleChange}
+                        placeholder="Category Name"
                     />
-                    <input 
-                        type="text" 
+                    <input
+                        type="text"
                         name="shortDescription"
-                        value={this.state.shortDescription} 
-                        onChange={this.handleChange} 
-                        placeholder="Short Description" 
+                        value={this.state.shortDescription}
+                        onChange={this.handleChange}
+                        placeholder="Short Description"
                     />
-                    <input 
-                        type="text" 
+                    <input
+                        type="text"
                         name="imageUrl"
-                        value={this.state.imageUrl} 
-                        onChange={this.handleChange} 
-                        placeholder="Image URL" 
+                        value={this.state.imageUrl}
+                        onChange={this.handleChange}
+                        placeholder="Image URL"
                     />
                     <button onClick={this.handleSubmit}>Add</button>
                 </div>
@@ -149,16 +149,16 @@ export class CategoryManagement extends Component {
         fetch(`${variables.API_URL}/Categories/${categoryId}`, {
             method: 'DELETE',
         })
-        .then(response => {
-            if (!response.ok) {
-                throw new Error('Failed to delete category');
-            }
-            // Remove the deleted category from state
-            this.setState(prevState => ({
-                categories: prevState.categories.filter(category => category.id !== categoryId)
-            }));
-        })
-        .catch(error => console.error("Error deleting category:", error));
+            .then(response => {
+                if (!response.ok) {
+                    throw new Error('Failed to delete category');
+                }
+                // Remove the deleted category from state
+                this.setState(prevState => ({
+                    categories: prevState.categories.filter(category => category.id !== categoryId)
+                }));
+            })
+            .catch(error => console.error("Error deleting category:", error));
     }
 
     handleEditCategory = (category) => {
@@ -179,14 +179,14 @@ export class CategoryManagement extends Component {
             },
             body: JSON.stringify({ name: newName, shortDescription: newShortDescription, imageUrl: newImageUrl }),
         })
-        .then(response => {
-            if (!response.ok) {
-                throw new Error('Failed to update category');
-            }
-            // Reset editing state
-            this.setState({ editingCategory: null });
-        })
-        .catch(error => console.error("Error updating category:", error));
+            .then(response => {
+                if (!response.ok) {
+                    throw new Error('Failed to update category');
+                }
+                // Reset editing state
+                this.setState({ editingCategory: null });
+            })
+            .catch(error => console.error("Error updating category:", error));
     }
 
     handleCategoryAdded = (newCategory) => {
@@ -226,18 +226,19 @@ export class CategoryManagement extends Component {
                                 </td>
                                 <td className="border px-2 py-2">
                                     <Tooltip content="Edit Category">
-                                        <IconButton variant="text" onClick={() => this.handleEditCategory(category)}>
-                                            <PencilIcon className="h-4 w-4" />
-                                        </IconButton>
+                                        <button className="inline-flex items-center px-3 py-1 border border-transparent text-sm leading-4 font-medium rounded-md text-white bg-blue-500 hover:bg-blue-700 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-blue-500" onClick={() => this.handleEditCategory(category)}>
+                                            Edit
+                                        </button>
                                     </Tooltip>
                                 </td>
                                 <td className="border px-2 py-2">
                                     <Tooltip content="Delete Category">
-                                        <IconButton variant="text" onClick={() => this.handleDeleteCategory(category.id)}>
-                                            <TrashIcon className="h-4 w-4" />
-                                        </IconButton>
+                                        <button className="inline-flex items-center px-3 py-1 border border-transparent text-sm leading-4 font-medium rounded-md text-white bg-red-500 hover:bg-red-700 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-red-500" onClick={() => this.handleDeleteCategory(category.id)}>
+                                            Delete
+                                        </button>
                                     </Tooltip>
                                 </td>
+
                             </tr>
                         ))}
                     </tbody>
