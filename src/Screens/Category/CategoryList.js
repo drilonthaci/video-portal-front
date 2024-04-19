@@ -34,7 +34,7 @@ class CategoryList extends Component {
         <div className="grid grid-cols-1 sm:grid-cols-3 gap-4 mt-6">
           {categories.map((category) => (
             <div key={category.id}>
-              <Link to={`/category/${encodeURIComponent(category.name)}`} className="block relative transition-transform duration-300 transform hover:scale-95">
+              <Link to={`/category/${encodeURIComponent(category.id)}`} className="block relative transition-transform duration-300 transform hover:scale-95">
                 <div className="absolute inset-0 bg-gray-900 opacity-50" />
                 <img src={category.imageUrl} alt={category.name} className="w-full h-full object-cover" />
                 <div className="absolute inset-x-0 bottom-0 pb-2 text-center">

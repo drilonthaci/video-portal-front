@@ -9,7 +9,7 @@ function RoutesContainer() {
   return (
     <Routes>
       <Route path="/categories" element={<CategoryList />} />
-      <Route path="/category/:categoryName" element={<CategoryDetails />} />      
+      <Route path="/category/:categoryId" element={<CategoryDetails />} />      
       <Route path="/admin/categories" element={<CategoryManagement />} />
       <Route path="*" element={<NotFound />} />
     </Routes>
