@@ -40,10 +40,10 @@ function CategoryDetails() {
             <div className="grid grid-cols-1 sm:grid-cols-2 md:grid-cols-3 lg:grid-cols-6 gap-7">
               {category.videoPosts.map(video => (
                 <Link key={video.id} to={`/video/${video.id}`}>
-                  <div className="bg-white rounded-lg shadow-md overflow-hidden">
-                    <img src={video.imageUrl} alt={video.title} className="w-full h-96 object-cover" />
-                    <div className="p-4">
-                      <h2 className="text-xl font-semibold mb-2 text-gray-800">{video.title}</h2>
+                  <div className="rounded-lg overflow-hidden h-full"> {/* Added 'h-full' class */}
+                    <img src={video.imageUrl} alt={video.title} className="w-full h-40 object-cover" />
+                    <div className="p-2">
+                      <h2 className="text-l font-semibold mb-2 text-gray-800">{video.title}</h2>
                       <p className="text-gray-600 text-lg">{video.shortDescription}</p>
                     </div>
                   </div>

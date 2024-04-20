@@ -24,13 +24,13 @@ function VideoPostDetails() {
 
     fetchVideoPost();
   }, [videoPostId]);
- 
+
   return (
-    <div className="bg-white min-h-screen">
+    <div className="bg-gray-100 min-h-screen">
       {videoPost && (
         <div className="container mx-auto py-8">
-          <div className="grid grid-cols-12 gap-4">
-            <div className="col-span-8">
+          <div className="grid grid-cols-1 md:grid-cols-12 gap-4">
+            <div className="col-span-12 md:col-span-8">
               <div className="relative" style={{ paddingBottom: '56.25%' }}>
                 {videoPost.videoUrl && (
                   <iframe
@@ -44,8 +44,8 @@ function VideoPostDetails() {
                 )}
               </div>
               <div className="mt-8">
-                <h2 className="text-xl font-semibold">{videoPost.title}</h2>
-                <div className="flex items-center mt-2 border-b pb-2">
+                <h2 className="text-xl font-semibold font-roboto">{videoPost.title}</h2>
+                <div className="flex items-center mt-2 border-b pb-2 font-roboto">
                   <div className="flex items-center mr-4 text-gray-600">
                     <FontAwesomeIcon icon={faEye} className="mr-1" /> {videoPost.views}
                   </div>
@@ -56,7 +56,7 @@ function VideoPostDetails() {
                     <FontAwesomeIcon icon={faThumbsDown} className="mr-1" /> {videoPost.dislikes}
                   </div>
                 </div>
-                <div className="mt-2 text-gray-600">
+                <div className="mt-2 text-gray-600 font-roboto">
                   Published Date: {new Date(videoPost.publishedDate).toLocaleDateString()}
                 </div>
                 <div className="flex items-center mt-4">
@@ -64,14 +64,14 @@ function VideoPostDetails() {
                 </div>
               </div>
               <div className="mt-8">
-                <h2 className="text-xl font-semibold">Description</h2>
-                <p className="text-lg text-gray-600">{videoPost.shortDescription}</p>
+                <h2 className="text-xl font-semibold font-roboto">Description</h2>
+                <p className="text-roboto text-lg text-gray-600">{videoPost.shortDescription}</p>
               </div>
               { /* comment section */}
               {/* the section for comments */}
             </div>
-            <div className="col-span-4 bg-gray-100 p-4 shadow">
-              <h2 className="text-lg font-semibold mb-4">Similar</h2>
+            <div className="col-span-12 md:col-span-4 bg-gray-100 p-4 shadow border-1 border-dry">
+              <h2 className="text-lg font-semibold font-roboto mb-4">Similar</h2>
               {/* similar videos, or thumbnails */}
             </div>
           </div>
