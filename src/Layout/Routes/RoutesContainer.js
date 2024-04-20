@@ -6,12 +6,18 @@ import CategoryList from "../../Screens/Category/CategoryList";
 import CategoryDetails from "../../Screens/Category/CategoryDetails";
 import VideoPostDetails from "../../Screens/VideoPost/VideoPostDetails";
 import VideoPostsList from "../../Screens/Dashboard/Admin/VideoPost/VideoPostsList";
+import Login from "../../Screens/Auth/Login/Login";
+import Register from "../../Screens/Auth/Register/Register";
+
 function RoutesContainer() {
   return (
     <Routes>
       <Route path="/categories" element={<CategoryList />} />
       <Route path="/category/:categoryId" element={<CategoryDetails />} />
       <Route path="/video/:videoPostId" element={<VideoPostDetails />} />
+      <Route path="/login"  element={<Login/>} />
+      <Route path="/register" element={<Register/>} />
+
       
       {/* admin */}
       <Route path="/admin/categories" element={<CategoryManagement />} />
