@@ -1,10 +1,7 @@
-
 import React, { Component } from "react";
-import { variables } from '../../../Variables';
-import { PencilIcon, TrashIcon, PlusIcon } from "@heroicons/react/24/solid";
 import { IconButton, Tooltip } from "@material-tailwind/react";
 import { Link } from "react-router-dom";
-
+import { variables } from "../../../../Variables";
 // Create a Modal component for editing category
 class EditCategoryModal extends Component {
     constructor(props) {
