@@ -75,10 +75,25 @@ class VideoPostsList extends Component {
             })
             .catch(error => {
                 console.error('Error creating video post:', error);
-                // Display an error message to the user or perform additional error handling
             });
     }
 
+    handleDeleteVideoPost = (postId) => {
+        fetch(`${variables.API_URL}/VideoPosts/${postId}`, {
+            method: 'DELETE',
+        })
+            .then(response => {
+                if (!response.ok) {
+                    throw new Error('Failed to delete video post');
+                }
+                this.setState(prevState => ({
+                    videoPosts: prevState.videoPosts.filter(post => post.id !== postId)
+                }));
+            })
+            .catch(error => {
+                console.error("Error deleting video post:", error);
+            });
+    }
 
     truncateContent(content, maxLength) {
         if (content.length <= maxLength) return content;
@@ -91,7 +106,9 @@ class VideoPostsList extends Component {
 
         return (
             <div className="container mx-auto mt-8">
-                <button onClick={this.handleOpenAddModal}>Add Video Post</button>
+                <button 
+                className="bg-blue-500 hover:bg-blue-700 text-white font-bold  py-2 px-4 rounded mb-4"
+                onClick={this.handleOpenAddModal}>Add Video Post</button>
 
                 {isAddModalOpen && (
                     <AddVideoPostModal
@@ -111,7 +128,6 @@ class VideoPostsList extends Component {
                             <th className="border px-2 py-2">Video</th>
                             <th className="border px-2 py-2">Published Date</th>
                             <th className="border px-2 py-2">Publisher</th>
-                            <th className="border px-2 py-2">Is Visible</th>
                             <th className="border px-2 py-2">Categories</th>
                             <th className="border px-2 py-2">Actions</th>
                         </tr>
@@ -130,15 +146,16 @@ class VideoPostsList extends Component {
                                 </td>
                                 <td className="border px-2 py-2">{videoPost.publishedDate}</td>
                                 <td className="border px-2 py-2">{videoPost.publisher}</td>
-                                <td className="border px-2 py-2">{videoPost.isVisible}</td>
                                 <td className="border px-2 py-2">
                                     {videoPost.categories.map(category => (
                                         <span key={category.id}>{category.name}, </span>
                                     ))}
                                 </td>
 
-                                <td className="border px-2 py-2">
-                                    <Link to={`/edit-video/${videoPost.id}`}>Edit</Link>
+                                <td className="border px-4 py-2">
+                                    <button
+                                        className="bg-red-500 hover:bg-red-700 text-white font-bold py-2 px-4 rounded"
+                                        onClick={() => this.handleDeleteVideoPost(videoPost.id)}>Delete</button>
                                 </td>
                             </tr>
                         ))}

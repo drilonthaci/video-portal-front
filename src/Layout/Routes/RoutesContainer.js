@@ -16,7 +16,6 @@ function RoutesContainer() {
       {/* admin */}
       <Route path="/admin/categories" element={<CategoryManagement />} />
       <Route path="/admin/video-posts" element={<VideoPostsList />} />
-     {/* <Route path="/edit-video/:id" element={<EditVideoPost />} />  */}
       <Route path="*" element={<NotFound />} />
     </Routes >
   );

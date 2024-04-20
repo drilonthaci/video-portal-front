@@ -67,12 +67,9 @@ function VideoPostDetails() {
                 <h2 className="text-xl font-semibold font-roboto">Description</h2>
                 <p className="text-roboto text-lg text-gray-600">{videoPost.shortDescription}</p>
               </div>
-              { /* comment section */}
-              {/* the section for comments */}
             </div>
             <div className="col-span-12 md:col-span-4 bg-gray-100 p-4 shadow border-1 border-dry">
               <h2 className="text-lg font-semibold font-roboto mb-4">Similar</h2>
-              {/* similar videos, or thumbnails */}
             </div>
           </div>
         </div>

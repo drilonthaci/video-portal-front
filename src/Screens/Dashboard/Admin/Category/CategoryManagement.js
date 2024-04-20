@@ -2,7 +2,6 @@ import React, { Component } from "react";
 import { IconButton, Tooltip } from "@material-tailwind/react";
 import { Link } from "react-router-dom";
 import { variables } from "../../../../Variables";
-// Create a Modal component for editing category
 class EditCategoryModal extends Component {
     constructor(props) {
         super(props);
