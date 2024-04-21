@@ -1,36 +1,67 @@
 import axios from 'axios';
 import Cookies from 'universal-cookie';
+import ObservableState from './ObservableState';
 
 const cookies = new Cookies();
 
-const AuthService = {
-  login: async (email, password) => {
+
+class AuthService {
+  constructor() {
+    this.$user = new ObservableState(undefined);
+  }
+
+  async login(email, password) {
     try {
       const response = await axios.post('http://localhost:5180/api/Auth/login', {
         email,
         password
       });
 
-      const { token } = response.data;
+      const { token, email: userEmail, roles } = response.data;
 
-      // Set Authorization cookie with Bearer token
+      // Store JWT token in a cookie
       cookies.set('Authorization', `Bearer ${token}`, {
-        path: '/',
+        path: '/', // Cookie path
         secure: true, // HTTPS only
-        sameSite: 'strict', // Same-site cookies
+        sameSite: 'strict' // Same-site policy
       });
 
+      // Set user data obtained from API response
+      const user = { email: userEmail, roles };
+      this.setUser(user); 
       return { success: true };
     } catch (error) {
       throw new Error('Invalid email or password');
     }
-  },
+  }
 
-  // logout: () => {
-  //   cookies.remove('Authorization', { path: '/' });
-  // },
+  setUser(user) {
+    this.$user.next(user);
+    localStorage.setItem('user-email', user.email);
+    localStorage.setItem('user-roles', user.roles.join(','));
+  }
 
-  getToken: () => {
+  getUser() {
+    const email = localStorage.getItem('user-email');
+    const roles = localStorage.getItem('user-roles');
+
+    if (email && roles) {
+      const user = {
+        email,
+        roles: roles.split(',')
+      };
+      return user;
+    }
+
+    return undefined;
+  }
+
+  isLoggedIn() {
+    const userEmail = localStorage.getItem('user-email');
+    return !!userEmail; // Check if user is logged in based on presence of email
+  }
+
+  getToken() {
     // Retrieve the token from the Authorization cookie
     const authCookie = cookies.get('Authorization');
     if (authCookie) {
@@ -38,12 +69,24 @@ const AuthService = {
       return token;
     }
     return null;
-  },
-
-  isLoggedIn: () => {
-    // Check if a valid Authorization cookie exists
-    return !!cookies.get('Authorization');
   }
-};
 
-export default AuthService;
+  logout() {
+    try {
+      // Clear user-related data from localStorage
+      localStorage.removeItem('user-email');
+      localStorage.removeItem('user-roles');
+
+      // Remove JWT token cookie
+      cookies.remove('Authorization', {
+        path: '/' // Cookie path
+      });
+      this.$user.next(undefined);
+    } catch (error) {
+      console.error('Error occurred during logout:', error);
+    }
+  }
+}
+
+const authService = new AuthService();
+export default authService;
