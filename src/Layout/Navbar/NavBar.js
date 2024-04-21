@@ -6,26 +6,34 @@ import AuthService from '../../Screens/Auth/Login/AuthService';
 
 function NavBar() {
     const hover = "hover:text-submain transitions text-white";
-    const hoverActive = "text-submain";
+    const hoverActive = "text-submain text-white";
     const [showAdminLinks, setShowAdminLinks] = useState(false);
     const [isLoggedIn, setIsLoggedIn] = useState(AuthService.isLoggedIn());
     const [userEmail, setUserEmail] = useState('');
+    const [userRoles, setUserRoles] = useState([]);
 
     const Hover = ({ isActive }) => (isActive ? hoverActive : hover);
 
     useEffect(() => {
-        // Fetch user email from AuthService
+        // Fetch user data from AuthService when component mounts
         const user = AuthService.getUser();
         if (user) {
             setUserEmail(user.email);
+            setUserRoles(user.roles);
         }
     }, []);
+
+    // Function to check if user has admin role
+    const hasAdminRole = () => {
+        return userRoles.includes('Creator');
+    };
 
     // Function to handle logout
     const handleLogout = () => {
         AuthService.logout();
         setIsLoggedIn(false);
-        setUserEmail(''); // Clear user email
+        setUserEmail('');
+        setUserRoles([]);
     };
 
     return (
@@ -52,12 +60,14 @@ function NavBar() {
                         <NavLink to="/categories" className={Hover}>
                             Categories
                         </NavLink>
-                        <NavLink to="/admin/categories"
-                            className={Hover}
-                            onClick={() => setShowAdminLinks(!showAdminLinks)}
-                        >
-                            Admin
-                        </NavLink>
+                        {hasAdminRole() && (
+                            <NavLink to="/admin/categories"
+                                className={Hover}
+                                onClick={() => setShowAdminLinks(!showAdminLinks)}
+                            >
+                                Admin
+                            </NavLink>
+                        )}
                         {isLoggedIn ? (
                             <div className="flex items-center">
                                 <span className="mr-2 text-white">{userEmail}</span>
