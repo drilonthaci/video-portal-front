@@ -1,42 +1,25 @@
 import React, { useState } from 'react';
 import { Link } from 'react-router-dom';
-import axios from 'axios';
+import AuthService from './AuthService';
 
 const Login = () => {
   const [email, setEmail] = useState('');
   const [password, setPassword] = useState('');
   const [error, setError] = useState('');
-  const [isLoggedIn, setIsLoggedIn] = useState(false);
   const [successMessage, setSuccessMessage] = useState('');
+  const [isLoggedIn, setIsLoggedIn] = useState(false);
 
   const handleLogin = async (e) => {
     e.preventDefault();
 
     try {
-      const response = await axios.post('http://localhost:5180/api/Auth/login', {
-        email,
-        password
-      });
-
-      const { token, roles } = response.data; // Assuming response includes token and roles
-      console.log('Login successful. Token:', token);
-
-      // Log user's email and role to console
-      console.log('User Email:', email);
-      console.log('User Role:', roles[0]); // Assuming roles is an array with one role
-
-      setIsLoggedIn(true); // Update login status
-      setSuccessMessage('Login successful!'); // Set success message
-
-      setEmail(''); // Clear form fields
-      setPassword('');
+      await AuthService.login(email, password);
       setError('');
+      window.location.href = '/';
     } catch (error) {
-      setError('Invalid email or password');
-      console.error('Login error:', error);
+      setError(error.message);
     }
   };
-
   return (
     <div className="min-h-screen flex items-center justify-center bg-gray-50 py-12 px-4 sm:px-6 lg:px-8">
       <div className="max-w-md w-full">
