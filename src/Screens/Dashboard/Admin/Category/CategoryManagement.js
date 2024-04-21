@@ -1,7 +1,9 @@
 import React, { Component } from "react";
-import { IconButton, Tooltip } from "@material-tailwind/react";
+import { Tooltip } from "@material-tailwind/react";
 import { Link } from "react-router-dom";
 import { variables } from "../../../../Variables";
+import AuthService from '../../../Auth/Login/AuthService';
+
 class EditCategoryModal extends Component {
     constructor(props) {
         super(props);
@@ -44,7 +46,6 @@ class EditCategoryModal extends Component {
     }
 }
 
-// Create a Modal component for adding category
 class AddCategoryModal extends Component {
     constructor(props) {
         super(props);
@@ -62,11 +63,13 @@ class AddCategoryModal extends Component {
     handleSubmit = (e) => {
         e.preventDefault();
         const { name, shortDescription, imageUrl } = this.state;
+        const token = AuthService.getToken();
 
         fetch(`${variables.API_URL}/Categories`, {
             method: 'POST',
             headers: {
                 'Content-Type': 'application/json',
+                'Authorization': `Bearer ${token}`,
             },
             body: JSON.stringify({ name, shortDescription, imageUrl }),
         })
@@ -140,10 +143,14 @@ export class CategoryManagement extends Component {
             .then(data => this.setState({ categories: data }))
             .catch(error => console.error("Error fetching categories:", error));
     }
-
+   
     handleDeleteCategory = (categoryId) => {
+        const token = AuthService.getToken();
         fetch(`${variables.API_URL}/Categories/${categoryId}`, {
             method: 'DELETE',
+            headers: {
+                'Authorization': `Bearer ${token}`,
+            },
         })
             .then(response => {
                 if (!response.ok) {
@@ -162,6 +169,7 @@ export class CategoryManagement extends Component {
     }
 
     handleSaveCategory = (newName, newShortDescription, newImageUrl) => {
+        const token = AuthService.getToken(); 
         const { editingCategory } = this.state;
         // Update category details in state
         editingCategory.name = newName;
@@ -172,6 +180,7 @@ export class CategoryManagement extends Component {
             method: 'PUT',
             headers: {
                 'Content-Type': 'application/json',
+                'Authorization': `Bearer ${token}`,
             },
             body: JSON.stringify({ name: newName, shortDescription: newShortDescription, imageUrl: newImageUrl }),
         })
@@ -184,7 +193,7 @@ export class CategoryManagement extends Component {
             })
             .catch(error => console.error("Error updating category:", error));
     }
-
+    
     handleCategoryAdded = (newCategory) => {
         this.setState(prevState => ({
             categories: [...prevState.categories, newCategory]

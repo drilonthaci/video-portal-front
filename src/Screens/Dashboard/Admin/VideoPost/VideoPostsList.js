@@ -2,6 +2,7 @@ import React, { Component } from "react";
 import { variables } from '../../../../Variables';
 import { Link } from 'react-router-dom';
 import AddVideoPostModal from "./AddVideoPostModal";
+import AuthService from '../../../Auth/Login/AuthService';
 
 class VideoPostsList extends Component {
     constructor(props) {
@@ -9,7 +10,7 @@ class VideoPostsList extends Component {
         this.state = {
             videoPosts: [],
             isAddModalOpen: false,
-            categories: [] // To store available categories
+            categories: []
         };
     }
 
@@ -51,10 +52,12 @@ class VideoPostsList extends Component {
     }
 
     handleCreateVideoPost = (newVideoPostData) => {
+        const token = AuthService.getToken(); 
         fetch(`${variables.API_URL}/VideoPosts`, {
             method: 'POST',
             headers: {
                 'Content-Type': 'application/json',
+                'Authorization': `Bearer ${token}`
             },
             body: JSON.stringify(newVideoPostData),
         })
@@ -79,8 +82,12 @@ class VideoPostsList extends Component {
     }
 
     handleDeleteVideoPost = (postId) => {
+        const token = AuthService.getToken(); 
         fetch(`${variables.API_URL}/VideoPosts/${postId}`, {
             method: 'DELETE',
+            headers: {
+                'Authorization': `Bearer ${token}`
+            },
         })
             .then(response => {
                 if (!response.ok) {

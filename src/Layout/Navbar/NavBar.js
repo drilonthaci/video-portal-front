@@ -15,7 +15,6 @@ function NavBar() {
     const Hover = ({ isActive }) => (isActive ? hoverActive : hover);
 
     useEffect(() => {
-        // Fetch user data from AuthService when component mounts
         const user = AuthService.getUser();
         if (user) {
             setUserEmail(user.email);
@@ -34,6 +33,7 @@ function NavBar() {
         setIsLoggedIn(false);
         setUserEmail('');
         setUserRoles([]);
+        window.location.href = '/categories';
     };
 
     return (
