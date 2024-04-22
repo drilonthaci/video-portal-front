@@ -1,12 +1,13 @@
 import React, { useState, useEffect } from 'react';
-import { useParams } from 'react-router-dom';
-import { variables } from '../../Variables'
+import { Link, useParams } from 'react-router-dom'; // Import Link from react-router-dom
+import { variables } from '../../Variables';
 import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
-import { faEye, faThumbsUp, faThumbsDown, faSave, faShare } from '@fortawesome/free-solid-svg-icons';
+import { faEye, faThumbsUp, faThumbsDown } from '@fortawesome/free-solid-svg-icons';
 
 function VideoPostDetails() {
   const { videoPostId } = useParams();
   const [videoPost, setVideoPost] = useState(null);
+  const [similarVideos, setSimilarVideos] = useState([]);
 
   useEffect(() => {
     const fetchVideoPost = async () => {
@@ -17,8 +18,16 @@ function VideoPostDetails() {
         }
         const videoPostData = await response.json();
         setVideoPost(videoPostData);
+
+        // Fetch similar videos based on the category of the current video
+        const similarVideosResponse = await fetch(`${variables.API_URL}/VideoPosts?category=${videoPostData.category}`);
+        if (!similarVideosResponse.ok) {
+          throw new Error(`Failed to fetch similar videos (${similarVideosResponse.status} ${similarVideosResponse.statusText})`);
+        }
+        const similarVideosData = await similarVideosResponse.json();
+        setSimilarVideos(similarVideosData);
       } catch (error) {
-        console.error('Error fetching video post:', error);
+        console.error('Error fetching video post or similar videos:', error);
       }
     };
 
@@ -70,6 +79,19 @@ function VideoPostDetails() {
             </div>
             <div className="col-span-12 md:col-span-4 bg-gray-100 p-4 shadow border-1 border-dry">
               <h2 className="text-lg font-semibold font-roboto mb-4">Similar</h2>
+              <div className="overflow-y-auto" style={{ maxHeight: 'calc(100vh - 200px)' }}>
+                {similarVideos.map((video) => (
+                  <Link key={video.id} to={`/video/${video.id}`} className="flex items-center mb-4"> 
+                    <img src={video.imageUrl} alt={video.title} className="h-16 w-24 mr-2" />
+                    <div>
+                      <h3 className="text-sm font-semibold font-roboto">{video.title}</h3>
+                      <div className="text-xs text-gray-600">
+                        {new Date(video.publishedDate).toLocaleDateString()}
+                      </div>
+                    </div>
+                  </Link>
+                ))}
+              </div>
             </div>
           </div>
         </div>
