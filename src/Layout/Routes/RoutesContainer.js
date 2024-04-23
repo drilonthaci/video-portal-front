@@ -9,6 +9,7 @@ import VideoPostsList from "../../Screens/Dashboard/Admin/VideoPost/VideoPostsLi
 import Login from "../../Screens/Auth/Login/Login";
 import Register from "../../Screens/Auth/Register/Register";
 import authService from "../../Screens/Auth/Login/AuthService"; // Import authService for authentication checks
+import LikesPage from "../../Screens/Likes/LikesPage";
 
 function RoutesContainer() {
   const isLoggedIn = authService.isLoggedIn();
@@ -21,7 +22,13 @@ function RoutesContainer() {
       <Route path="/register" element={isLoggedIn ? <Navigate to="/" /> : <Register />} />
       <Route path="/categories" element={<CategoryList />} />
       <Route path="/category/:categoryId" element={<CategoryDetails />} />
-      <Route path="/video/:videoPostId" element={<VideoPostDetails />} />
+
+      {isLoggedIn && user && (
+        <>
+          <Route path="/video/:videoPostId" element={<VideoPostDetails />} />
+          <Route path="/likes" element={<LikesPage />} />
+        </>
+      )}
 
       {/* Protected Admin Routes */}
       {isLoggedIn && user && user.roles.includes('Creator') && (

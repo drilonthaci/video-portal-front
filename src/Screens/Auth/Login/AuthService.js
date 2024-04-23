@@ -4,7 +4,6 @@ import ObservableState from './ObservableState';
 
 const cookies = new Cookies();
 
-
 class AuthService {
   constructor() {
     this.$user = new ObservableState(undefined);
@@ -19,16 +18,14 @@ class AuthService {
 
       const { token, email: userEmail, roles } = response.data;
 
-      // Store JWT token in a cookie
       cookies.set('Authorization', `Bearer ${token}`, {
-        path: '/', // Cookie path
-        secure: true, // HTTPS only
-        sameSite: 'strict' // Same-site policy
+        path: '/',
+        secure: true,
+        sameSite: 'strict'
       });
 
-      // Set user data obtained from API response
       const user = { email: userEmail, roles };
-      this.setUser(user); 
+      this.setUser(user);
       return { success: true };
     } catch (error) {
       throw new Error('Invalid email or password');
@@ -58,11 +55,10 @@ class AuthService {
 
   isLoggedIn() {
     const userEmail = localStorage.getItem('user-email');
-    return !!userEmail; // Check if user is logged in based on presence of email
+    return !!userEmail;
   }
 
   getToken() {
-    // Retrieve the token from the Authorization cookie
     const authCookie = cookies.get('Authorization');
     if (authCookie) {
       const token = authCookie.replace('Bearer ', '');
@@ -72,18 +68,35 @@ class AuthService {
   }
 
   logout() {
-    try {
-      // Clear user-related data from localStorage
-      localStorage.removeItem('user-email');
-      localStorage.removeItem('user-roles');
+    localStorage.removeItem('user-email');
+    localStorage.removeItem('user-roles');
+    cookies.remove('Authorization', {
+      path: '/'
+    });
+    this.$user.next(undefined);
+  }
 
-      // Remove JWT token cookie
-      cookies.remove('Authorization', {
-        path: '/' // Cookie path
-      });
-      this.$user.next(undefined);
+  async likeVideoPost(videoPostId, userEmail) {
+    try {
+      const token = this.getToken(); // Retrieve token from cookies
+      const config = {
+        headers: {
+          Authorization: `Bearer ${token}`
+        }
+      };
+
+      const response = await axios.post(
+        `http://localhost:5180/api/VideoPostLike/like/${videoPostId}?userEmail=${userEmail}`,
+        {},
+        config
+      );
+      // Store the liked status in localStorage
+      localStorage.setItem(`liked-${videoPostId}`, 'true');
+
+      return response.data; // You can return any response data if needed
     } catch (error) {
-      console.error('Error occurred during logout:', error);
+      console.error('Error liking video post:', error);
+      throw new Error('Failed to like video post');
     }
   }
 }
