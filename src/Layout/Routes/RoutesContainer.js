@@ -10,6 +10,7 @@ import Login from "../../Screens/Auth/Login/Login";
 import Register from "../../Screens/Auth/Register/Register";
 import authService from "../../Screens/Auth/Login/AuthService"; // Import authService for authentication checks
 import LikesPage from "../../Screens/Likes/LikesPage";
+import HomePage from "../../Screens/Homepage";
 
 function RoutesContainer() {
   const isLoggedIn = authService.isLoggedIn();
@@ -18,6 +19,7 @@ function RoutesContainer() {
   return (
     <Routes>
       {/* Public Routes */}
+      <Route path="/" element={<HomePage/>} />
       <Route path="/login" element={isLoggedIn ? <Navigate to="/" /> : <Login />} />
       <Route path="/register" element={isLoggedIn ? <Navigate to="/" /> : <Register />} />
       <Route path="/categories" element={<CategoryList />} />
