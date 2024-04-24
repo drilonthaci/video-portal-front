@@ -8,8 +8,9 @@ import authService from '../Auth/Login/AuthService';
 function VideoPostDetails() {
   const { videoPostId } = useParams();
   const [videoPost, setVideoPost] = useState(null);
-  const [likedVideos, setLikedVideos] = useState({}); // State to track liked status of each video
+  const [likedVideos, setLikedVideos] = useState({});
   const [similarVideos, setSimilarVideos] = useState([]);
+  const [commentText, setCommentText] = useState('');
 
   useEffect(() => {
     const fetchVideoPost = async () => {
@@ -21,7 +22,6 @@ function VideoPostDetails() {
         const videoPostData = await response.json();
         setVideoPost(videoPostData);
 
-        // Fetch similar videos based on the category of the current video post
         const similarVideosResponse = await fetch(`${variables.API_URL}/VideoPosts?category=${videoPostData.category}`);
         if (similarVideosResponse.ok) {
           const similarVideosData = await similarVideosResponse.json();
@@ -37,18 +37,39 @@ function VideoPostDetails() {
 
   const handleLike = async (id) => {
     try {
-      const userEmail = authService.getUser().email; // Get logged-in user's email
+      const userEmail = authService.getUser().email;
       const isLiked = likedVideos[id];
 
       if (isLiked) {
         await authService.unlikeVideoPost(id, userEmail);
-        setLikedVideos({ ...likedVideos, [id]: false }); // Update liked state for this video
+        setLikedVideos({ ...likedVideos, [id]: false });
       } else {
         await authService.likeVideoPost(id, userEmail);
-        setLikedVideos({ ...likedVideos, [id]: true }); // Update liked state for this video
+        setLikedVideos({ ...likedVideos, [id]: true });
       }
     } catch (error) {
       console.error('Error liking/unliking video post:', error);
+    }
+  };
+
+  const handleAddComment = async () => {
+    try {
+      const userEmail = authService.getUser().email;
+      await authService.addComment(videoPostId, userEmail, commentText);
+
+      // Fetch the updated video post data after adding the comment
+      const response = await fetch(`${variables.API_URL}/VideoPosts/${videoPostId}`);
+      if (!response.ok) {
+        throw new Error(`Failed to fetch updated video post (${response.status} ${response.statusText})`);
+      }
+      const updatedVideoPostData = await response.json();
+
+      // Update the video post state to reflect the new comment
+      setVideoPost(updatedVideoPostData);
+
+      setCommentText('');
+    } catch (error) {
+      console.error('Error adding comment:', error);
     }
   };
 
@@ -91,6 +112,35 @@ function VideoPostDetails() {
                 <div className="mt-4">
                   <Link to="/likes" className="text-blue-500 hover:underline">Manage Your Reactions</Link>
                 </div>
+                {/* Display Comments Section */}
+                <div className="mt-4">
+                  <h3 className="text-lg font-semibold font-roboto mb-2">Comments</h3>
+                  {videoPost && videoPost.comments && (
+                    videoPost.comments.map((comment) => (
+                      <div key={comment.id} className="border-b pb-2">
+                        <p className="text-sm text-gray-800">
+                          <strong>{comment.userEmail.split('@')[0]}:</strong> {comment.commentText}
+                        </p>
+                        <p className="text-xs text-gray-600">
+                          Posted on {new Date(comment.commentedAt).toLocaleDateString()}
+                        </p>
+                      </div>
+                    ))
+                  )}
+                </div>
+
+                {/* Comment Input Section */}
+                <div className="mt-4">
+                  <textarea
+                    value={commentText}
+                    onChange={(e) => setCommentText(e.target.value)}
+                    placeholder="Write your comment here..."
+                    className="w-full p-2 border rounded"
+                  />
+                  <button onClick={handleAddComment} className="mt-2 bg-blue-500 hover:bg-blue-700 text-white font-bold py-2 px-4 rounded">
+                    Add Comment
+                  </button>
+                </div>
               </div>
             </div>
             {/* Similar Videos Section */}
@@ -105,11 +155,6 @@ function VideoPostDetails() {
                       <div className="text-xs text-gray-600">
                         Published Date: {new Date(video.publishedDate).toLocaleDateString()}
                       </div>
-                      {/* <FontAwesomeIcon
-                        icon={faThumbsUp}
-                        className={`ml-1 cursor-pointer ${likedVideos[video.id] ? 'text-blue-500' : 'text-gray-400'}`}
-                        onClick={() => handleLike(video.id)}
-                      /> */}
                     </div>
                   </Link>
                 ))}
@@ -123,4 +168,3 @@ function VideoPostDetails() {
 }
 
 export default VideoPostDetails;
-

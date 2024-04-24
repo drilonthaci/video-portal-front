@@ -48,7 +48,7 @@ function NavBar() {
                     </div>
                     {/* search form */}
                     <div className='col-span-3'>
-                     
+
                     </div>
                     {/* menu */}
                     <div className='col-span-3 font-medium text-sm hidden xl:gap-14 2xl:gap-20 justify-between lg:flex xl:justify-end items-center'>
