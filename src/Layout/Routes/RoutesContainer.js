@@ -8,7 +8,7 @@ import VideoPostDetails from "../../Screens/VideoPost/VideoPostDetails";
 import VideoPostsList from "../../Screens/Dashboard/Admin/VideoPost/VideoPostsList";
 import Login from "../../Screens/Auth/Login/Login";
 import Register from "../../Screens/Auth/Register/Register";
-import authService from "../../Screens/Auth/Login/AuthService"; // Import authService for authentication checks
+import authService from "../../Screens/Auth/Login/AuthService";
 import LikesPage from "../../Screens/Likes/LikesPage";
 import HomePage from "../../Screens/Homepage";
 
@@ -40,7 +40,7 @@ function RoutesContainer() {
         </>
       )}
       {/* 404 Not Found Route */}
-      <Route path="*" element={<NotFound />} />
+      <Route path="*" element={<Login />} />
     </Routes>
   );
 }

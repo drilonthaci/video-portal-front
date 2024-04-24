@@ -8,8 +8,8 @@ import authService from '../Auth/Login/AuthService';
 function VideoPostDetails() {
   const { videoPostId } = useParams();
   const [videoPost, setVideoPost] = useState(null);
+  const [likedVideos, setLikedVideos] = useState({}); // State to track liked status of each video
   const [similarVideos, setSimilarVideos] = useState([]);
-  const [likedVideos, setLikedVideos] = useState([]); // Array to store IDs of liked videos
 
   useEffect(() => {
     const fetchVideoPost = async () => {
@@ -21,22 +21,11 @@ function VideoPostDetails() {
         const videoPostData = await response.json();
         setVideoPost(videoPostData);
 
+        // Fetch similar videos based on the category of the current video post
         const similarVideosResponse = await fetch(`${variables.API_URL}/VideoPosts?category=${videoPostData.category}`);
-        if (!similarVideosResponse.ok) {
-          throw new Error(`Failed to fetch similar videos (${similarVideosResponse.status} ${similarVideosResponse.statusText})`);
-        }
-        const similarVideosData = await similarVideosResponse.json();
-        setSimilarVideos(similarVideosData);
-      
-        // Fetch liked video IDs for the current user
-        const user = authService.getUser();
-        if (user) {
-          const userLikedVideosResponse = await fetch(`${variables.API_URL}/LikedVideos?userId=${user.id}`);
-          if (userLikedVideosResponse.ok) {
-            const userLikedVideosData = await userLikedVideosResponse.json();
-            const likedVideoIds = userLikedVideosData.map(item => item.videoId);
-            setLikedVideos(likedVideoIds);
-          }
+        if (similarVideosResponse.ok) {
+          const similarVideosData = await similarVideosResponse.json();
+          setSimilarVideos(similarVideosData);
         }
       } catch (error) {
         console.error('Error fetching video post or similar videos:', error);
@@ -46,15 +35,20 @@ function VideoPostDetails() {
     fetchVideoPost();
   }, [videoPostId]);
 
-  const handleLike = async () => {
+  const handleLike = async (id) => {
     try {
       const userEmail = authService.getUser().email; // Get logged-in user's email
-      await authService.likeVideoPost(videoPostId, userEmail); // Call likeVideoPost method from AuthService
-      
-      // Update liked videos array with the ID of the current video post
-      setLikedVideos([...likedVideos, videoPostId]);
+      const isLiked = likedVideos[id];
+
+      if (isLiked) {
+        await authService.unlikeVideoPost(id, userEmail);
+        setLikedVideos({ ...likedVideos, [id]: false }); // Update liked state for this video
+      } else {
+        await authService.likeVideoPost(id, userEmail);
+        setLikedVideos({ ...likedVideos, [id]: true }); // Update liked state for this video
+      }
     } catch (error) {
-      console.error('Error liking video post:', error);
+      console.error('Error liking/unliking video post:', error);
     }
   };
 
@@ -84,8 +78,8 @@ function VideoPostDetails() {
                   <div className="flex items-center mr-4 text-gray-600">
                     <FontAwesomeIcon
                       icon={faThumbsUp}
-                      className={`mr-1 cursor-pointer ${likedVideos.includes(videoPostId) ? 'text-blue-500' : 'text-gray-400'}`} // Check if current video post is liked
-                      onClick={handleLike}
+                      className={`mr-1 cursor-pointer ${likedVideos[videoPostId] ? 'text-blue-500' : 'text-gray-400'}`}
+                      onClick={() => handleLike(videoPostId)}
                     />{' '}
                     {videoPost.likes}
                   </div>
@@ -101,16 +95,21 @@ function VideoPostDetails() {
             </div>
             {/* Similar Videos Section */}
             <div className="col-span-12 md:col-span-4 bg-gray-100 p-4 shadow border-1 border-dry">
-              <h2 className="text-lg font-semibold font-roboto mb-4">Similar</h2>
+              <h2 className="text-lg font-semibold font-roboto mb-4">Similar Videos</h2>
               <div className="overflow-y-auto" style={{ maxHeight: 'calc(100vh - 200px)' }}>
                 {similarVideos.map((video) => (
-                  <Link key={video.id} to={`/video/${video.id}`} className="flex items-center mb-4"> 
+                  <Link key={video.id} to={`/video/${video.id}`} className="flex items-center mb-4">
                     <img src={video.imageUrl} alt={video.title} className="h-16 w-24 mr-2" />
                     <div>
                       <h3 className="text-sm font-semibold font-roboto">{video.title}</h3>
                       <div className="text-xs text-gray-600">
-                        {new Date(video.publishedDate).toLocaleDateString()}
+                        Published Date: {new Date(video.publishedDate).toLocaleDateString()}
                       </div>
+                      {/* <FontAwesomeIcon
+                        icon={faThumbsUp}
+                        className={`ml-1 cursor-pointer ${likedVideos[video.id] ? 'text-blue-500' : 'text-gray-400'}`}
+                        onClick={() => handleLike(video.id)}
+                      /> */}
                     </div>
                   </Link>
                 ))}
@@ -124,3 +123,4 @@ function VideoPostDetails() {
 }
 
 export default VideoPostDetails;
+
