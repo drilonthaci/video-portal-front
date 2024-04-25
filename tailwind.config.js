@@ -20,7 +20,7 @@ module.exports = {
         main: '#080A1A',
         submain: '#FFAF45',
         dry: '#0B0F29',
-        star: '#FFB000',
+        hover: '#FDA403',
         text: '#C0C0C0',
         border: '#4b5563',
         dryGray: '#E0D5D5',

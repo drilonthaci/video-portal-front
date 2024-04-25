@@ -3,6 +3,8 @@ import { Link } from 'react-router-dom';
 import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
 import { faChevronLeft, faChevronRight, faHome } from '@fortawesome/free-solid-svg-icons';
 import { variables } from '../Variables';
+import Footer from '../Layout/Footer/Footer';
+
 
 const HomePage = () => {
     const [videos, setVideos] = useState([]);
@@ -146,7 +148,7 @@ const HomePage = () => {
                             onChange={handleInputChange}
                             className="border rounded-l-md px-4 py-2 w-72 focus:outline-none focus:ring-2 focus:ring-blue-500"
                         />
-                        <button onClick={handleSearch} className="bg-blue-500 hover:bg-blue-700 text-white py-2 px-4 rounded-r-md">
+                        <button onClick={handleSearch} className="bg-submain hover:bg-hover text-white py-2 px-4 rounded-r-md">
                             Search
                         </button>
                     </div>
@@ -169,6 +171,7 @@ const HomePage = () => {
                     ))}
                 </div>
             </div>
+            <Footer /> {/* Include the Footer component here */}
         </div>
     );
 };

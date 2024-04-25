@@ -4,6 +4,7 @@ import { variables } from '../../Variables';
 import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
 import { faEye, faThumbsUp, faThumbsDown } from '@fortawesome/free-solid-svg-icons';
 import authService from '../Auth/Login/AuthService';
+import Footer from '../../Layout/Footer/Footer';
 
 function VideoPostDetails() {
   const { videoPostId } = useParams();
@@ -161,8 +162,11 @@ function VideoPostDetails() {
               </div>
             </div>
           </div>
+          
         </div>
+        
       )}
+      <Footer />
     </div>
   );
 }

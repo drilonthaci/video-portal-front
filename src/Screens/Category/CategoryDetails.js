@@ -1,6 +1,7 @@
 import React, { useState, useEffect } from 'react';
 import { Link, useParams } from 'react-router-dom';
 import { variables } from '../../Variables';
+import Footer from '../../Layout/Footer/Footer';
 
 function CategoryDetails() {
   const { categoryId } = useParams();
@@ -87,9 +88,12 @@ function CategoryDetails() {
             <div className="text-gray-800 mt-8">
               <p>{category.description}</p>
             </div>
+            
           </div>
         </>
+        
       )}
+      <Footer />
     </div>
   );
 }
