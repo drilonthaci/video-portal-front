@@ -113,6 +113,9 @@ function VideoPostDetails() {
                 <div className="mt-4">
                   <Link to="/likes" className="text-blue-500 hover:underline">Manage Your Reactions</Link>
                 </div>
+                <div className="mt-4">
+                  <Link to="/comments" className="text-blue-500 hover:underline">Manage Your Comments</Link>
+                </div>
                 {/* Display Comments Section */}
                 <div className="mt-4">
                   <h3 className="text-lg font-semibold font-roboto mb-2">Comments</h3>

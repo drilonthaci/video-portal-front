@@ -11,6 +11,7 @@ import Register from "../../Screens/Auth/Register/Register";
 import authService from "../../Screens/Auth/Login/AuthService";
 import LikesPage from "../../Screens/Likes/LikesPage";
 import HomePage from "../../Screens/Homepage";
+import CommentsList from "../../Screens/Comment/CommentsList";
 
 function RoutesContainer() {
   const isLoggedIn = authService.isLoggedIn();
@@ -24,11 +25,13 @@ function RoutesContainer() {
       <Route path="/register" element={isLoggedIn ? <Navigate to="/" /> : <Register />} />
       <Route path="/categories" element={<CategoryList />} />
       <Route path="/category/:categoryId" element={<CategoryDetails />} />
+      
 
       {isLoggedIn && user && (
         <>
           <Route path="/video/:videoPostId" element={<VideoPostDetails />} />
           <Route path="/likes" element={<LikesPage />} />
+          <Route path="/comments" element={<CommentsList />} />
         </>
       )}
 
