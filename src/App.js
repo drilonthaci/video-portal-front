@@ -1,7 +1,7 @@
 import React from 'react';
 import { BrowserRouter } from 'react-router-dom'; 
-import RoutesContainer from './Layout/Routes/RoutesContainer';
-import NavBar from './Layout/Navbar/NavBar';
+import RoutesContainer from './RoutesContainer';
+import NavBar from './components/layout/navbar/NavBar';
 
 function App() {
   return (
