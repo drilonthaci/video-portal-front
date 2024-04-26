@@ -28,6 +28,8 @@ const CategoryDetailsPage = () => {
     fetchCategory();
   }, [categoryId]);
 
+  
+
 
   return (
     <div className="bg-gray-100 min-h-screen">
@@ -36,7 +38,30 @@ const CategoryDetailsPage = () => {
           <CategoryDetailsHeader category={category} />
           <CategoryContents filteredVideoPosts={filteredVideoPosts} category={category} />
         </>
+
+        
       )}
+         <div className="bg-main py-10 sm:py-5">
+  <div className="mx-auto max-w-7xl px-6 lg:px-8">
+    <div className="mx-auto mt-10 grid max-w-lg grid-cols-5 sm:max-w-xl sm:grid-cols-5 sm:gap-x-6 lg:mx-0 lg:max-w-none lg:grid-cols-5 gap-x-4 gap-y-6">
+      <div className="col-span-1 flex justify-center items-center">
+        <img src="/images/aNet.webp" alt="aNet Image" className="h-5" />
+      </div>
+      <div className="col-span-1 flex justify-center items-center">
+        <img src="/images/gjirafa.webp" alt="/images/gjirafa.webp" className="h-5" />
+      </div>
+      <div className="col-span-1 flex justify-center items-center">
+        <img src="/images/gjirafa50.webp" alt="/images/gjirafa50.webp" className="h-5" />
+      </div>
+      <div className="col-span-1 flex justify-center items-center">
+        <img src="/images/gjirafapikbiz.webp" alt="/images/gjirafapikbiz.webp" className="h-5" />
+      </div>
+      <div className="col-span-1 flex justify-center items-center">
+        <img src="/images/lab.webp" alt="lab.webp" className="h-5" />
+      </div>
+    </div>
+  </div>
+</div>
       <Footer />
     </div>
   );

@@ -18,13 +18,23 @@ const CategoryContents = ({ filteredVideoPosts, category }) => {
                 <p className="text-gray-600 text-lg">{video.shortDescription}</p>
               </div>
             </div>
+
+          
           </Link>
+
+          
         ))}
       </div>
+      
       <div className="text-gray-800 mt-8">
         <p>{category.description}</p>
+        
       </div>
+
+      
     </div>
+
+    
   );
 };
 
