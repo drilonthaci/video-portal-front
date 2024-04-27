@@ -16,9 +16,9 @@ const ReactionsManagement = () => {
         throw new Error('User not authenticated');
       }
 
-      const userEmail = user.email;
+      const userId = user.userId;
 
-      const response = await fetch(`${variables.API_URL}/VideoPostLike/likes?userEmail=${encodeURIComponent(userEmail)}`);
+      const response = await fetch(`${variables.API_URL}/VideoPostLike/likes?userId=${encodeURIComponent(userId)}`);
       if (!response.ok) {
         throw new Error(`Failed to fetch liked video posts (${response.status} ${response.statusText})`);
       }
@@ -64,9 +64,9 @@ const ReactionsManagement = () => {
         throw new Error('User not authenticated');
       }
 
-      const userEmail = user.email;
+      const id = user.userId;
 
-      await authService.unlikeVideoPost(videoPostId, userEmail);
+      await authService.unlikeVideoPost(videoPostId, id);
       // After successfully unliking, refetch the liked video posts and user comments
       fetchLikedVideoPosts();
       fetchUserComments();

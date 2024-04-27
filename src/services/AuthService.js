@@ -10,6 +10,7 @@ class AuthService {
     this.$user = new ObservableState(undefined);
   }
 
+
   async login(email, password) {
     try {
       const response = await axios.post('http://localhost:5180/api/Auth/login', {
@@ -17,34 +18,51 @@ class AuthService {
         password
       });
 
-      const { token, email: userEmail, roles } = response.data;
+      // Check if the response contains the expected fields
+      if (!response.data || !response.data.userId || !response.data.email || !response.data.roles) {
+        throw new Error('Unexpected response from server');
+      }
 
-      cookies.set('Authorization', `Bearer ${token}`, {
+      const { userId: likerId, email: userEmail, roles } = response.data;
+
+      cookies.set('Authorization', `Bearer ${response.data.token}`, {
         path: '/',
         secure: true,
         sameSite: 'strict'
       });
 
-      const user = { email: userEmail, roles };
+      const user = { userId: likerId, email: userEmail, roles };
       this.setUser(user);
       return { success: true };
     } catch (error) {
-      throw new Error('Invalid email or password');
+      console.error('Error during login:', error);
+      if (error.response && error.response.status === 401) {
+        throw new Error('Invalid email or password');
+      } else {
+        throw new Error('An error occurred during login');
+      }
     }
   }
 
+
+
+
   setUser(user) {
     this.$user.next(user);
+    localStorage.setItem('user-id', user.userId);
     localStorage.setItem('user-email', user.email);
     localStorage.setItem('user-roles', user.roles.join(','));
   }
 
+
   getUser() {
+    const userId = localStorage.getItem('user-id');
     const email = localStorage.getItem('user-email');
     const roles = localStorage.getItem('user-roles');
 
-    if (email && roles) {
+    if (userId && email && roles) { // Change userId to likerId
       const user = {
+        userId,
         email,
         roles: roles.split(',')
       };
@@ -55,6 +73,7 @@ class AuthService {
   }
 
   isLoggedIn() {
+    // const userId = localStorage.getItem('user-id');
     const userEmail = localStorage.getItem('user-email');
     return !!userEmail;
   }
@@ -68,7 +87,8 @@ class AuthService {
     return null;
   }
 
-  async likeVideoPost(videoPostId, userEmail) {
+
+  async likeVideoPost(videoPostId, userId) {
     try {
       const token = this.getToken(); // Retrieve token from cookies
       const config = {
@@ -78,7 +98,7 @@ class AuthService {
       };
 
       const response = await axios.post(
-        `http://localhost:5180/api/VideoPostLike/like/${videoPostId}?userEmail=${userEmail}`,
+        `http://localhost:5180/api/VideoPostLike/like/${videoPostId}?userId=${userId}`,
         {},
         config
       );
@@ -92,7 +112,7 @@ class AuthService {
     }
   }
 
-  async unlikeVideoPost(videoPostId, userEmail) {
+  async unlikeVideoPost(videoPostId, userId) {
     try {
       const token = this.getToken(); // Retrieve token from cookies
       const config = {
@@ -102,18 +122,20 @@ class AuthService {
       };
 
       const response = await axios.delete(
-        `http://localhost:5180/api/VideoPostLike/unlike/${videoPostId}?userEmail=${userEmail}`,
+        `http://localhost:5180/api/VideoPostLike/unlike/${videoPostId}?userId=${userId}`,
         config
       );
       // Remove the liked status from localStorage
       localStorage.removeItem(`liked-${videoPostId}`);
 
-      return response.data; // You can return any response data if needed
+      return response.data; 
     } catch (error) {
       console.error('Error unliking video post:', error);
       throw new Error('Failed to unlike video post');
     }
   }
+
+
 
   async addComment(videoPostId, userEmail, commentText) {
     try {
@@ -123,21 +145,22 @@ class AuthService {
           Authorization: `Bearer ${token}`
         }
       };
-  
+
       const response = await axios.post(
         `http://localhost:5180/api/VideoPostComments/comment/${videoPostId}?userEmail=${userEmail}&commentText=${commentText}`,
         {},
         config
       );
-  
-      return response.data; 
+
+      return response.data;
     } catch (error) {
       console.error('Error adding comment:', error);
       throw new Error('Failed to add comment');
     }
   }
- 
+
   logout() {
+    localStorage.removeItem('user-id');
     localStorage.removeItem('user-email');
     localStorage.removeItem('user-roles');
     cookies.remove('Authorization', {

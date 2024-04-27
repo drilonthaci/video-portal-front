@@ -41,17 +41,17 @@ function VideoPostDetails() {
 
     fetchVideoPost();
   }, [videoPostId]);
-
+  
   const handleLike = async (id) => {
     try {
-      const userEmail = authService.getUser().email;
+      const likerId = authService.getUser().userId;
       const isLiked = likedVideos[id];
 
       if (isLiked) {
-        await authService.unlikeVideoPost(id, userEmail);
+        await authService.unlikeVideoPost(id, likerId);
         setLikedVideos({ ...likedVideos, [id]: false });
       } else {
-        await authService.likeVideoPost(id, userEmail);
+        await authService.likeVideoPost(id, likerId);
         setLikedVideos({ ...likedVideos, [id]: true });
       }
     } catch (error) {
