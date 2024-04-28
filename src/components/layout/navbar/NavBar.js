@@ -5,12 +5,12 @@ import AuthService from '../../../services/AuthService';
 
 function NavBar() {
     const hover = "hover:text-submain";
-    const hoverActive = "hover:text-submain";
     const [showAdminLinks, setShowAdminLinks] = useState(false);
     const [showMobileMenu, setShowMobileMenu] = useState(false);
     const [isLoggedIn, setIsLoggedIn] = useState(AuthService.isLoggedIn());
     const [userEmail, setUserEmail] = useState('');
     const [userRoles, setUserRoles] = useState([]);
+    const [currentAdminLink, setCurrentAdminLink] = useState('/admin/categories');
 
     useEffect(() => {
         const user = AuthService.getUser();
@@ -30,6 +30,20 @@ function NavBar() {
         setUserEmail('');
         setUserRoles([]);
         window.location.href = '/categories';
+    };
+
+    const handleAdminClick = () => {
+        setShowAdminLinks(!showAdminLinks);
+        // If mobile menu is not shown, show it when admin links are clicked
+        if (!showMobileMenu) {
+            setShowMobileMenu(true);
+        }
+    };
+
+    const handleSubmenuClick = (link) => {
+        setCurrentAdminLink(link);
+        setShowAdminLinks(false); // Close submenu when a submenu item is clicked
+        setShowMobileMenu(false); // Close mobile menu after submenu click
     };
 
     return (
@@ -57,15 +71,22 @@ function NavBar() {
                         {hasAdminRole() && (
                             <li>
                                 <NavLink
-                                    to="/admin/categories"
-                                    className="block py-2 text-white hover:text-submain"
-                                    onClick={() => {
-                                        setShowAdminLinks(!showAdminLinks);
-                                        setShowMobileMenu(false);
-                                    }}
+                                    to={currentAdminLink}
+                                    className={`block py-2 text-white hover:text-submain ${showAdminLinks && 'bg-submain'}`}
+                                    onClick={handleAdminClick}
                                 >
                                     Admin
                                 </NavLink>
+                                {showAdminLinks && (
+                                    <ul className="text-center">
+                                        <li>
+                                            <NavLink to="/admin/categories" className="block py-2 text-white hover:text-submain" onClick={() => handleSubmenuClick('/admin/categories')}>Category</NavLink>
+                                        </li>
+                                        <li>
+                                            <NavLink to="/admin/video-posts" className="block py-2 text-white hover:text-submain" onClick={() => handleSubmenuClick('/admin/video-posts')}>VideoPost</NavLink>
+                                        </li>
+                                    </ul>
+                                )}
                             </li>
                         )}
                         {isLoggedIn ? (
@@ -102,13 +123,25 @@ function NavBar() {
                 </li>
                 {hasAdminRole() && (
                     <li>
-                        <NavLink
-                            to="/admin/categories"
-                            className={`bg-submain rounded-md px-8 py-2`}
-                            onClick={() => setShowAdminLinks(!showAdminLinks)}
-                        >
-                            Admin
-                        </NavLink>
+                        <div className="relative">
+                            <NavLink
+                                to={currentAdminLink}
+                                className={`bg-submain rounded-md px-8 py-2 ${showAdminLinks && 'hover:text-submain'}`}
+                                onClick={handleAdminClick}
+                            >
+                                Admin
+                            </NavLink>
+                            {showAdminLinks && (
+                                <ul className="absolute bg-main shadow-md mt-2 p-3 text-center">
+                                    <li>
+                                        <NavLink to="/admin/categories" className="text-white hover:text-submain" onClick={() => handleSubmenuClick('/admin/categories')}>Category</NavLink>
+                                    </li>
+                                    <li>
+                                        <NavLink to="/admin/video-posts" className="text-white hover:text-submain" onClick={() => handleSubmenuClick('/admin/video-posts')}>VideoPost</NavLink>
+                                    </li>
+                                </ul>
+                            )}
+                        </div>
                     </li>
                 )}
                 {isLoggedIn ? (
@@ -127,6 +160,7 @@ function NavBar() {
                 )}
             </ul>
         </nav>
+        
     );
 }
 
