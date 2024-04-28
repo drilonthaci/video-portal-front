@@ -3,7 +3,7 @@ import { variables } from '../../Variables';
 import UserLikes from '../../components/reactions/UserLikes';
 import UserComments from '../../components/reactions/UserComments';
 import authService from '../../services/AuthService';
-import { HeartIcon, ChatIcon } from '@heroicons/react/outline'; // Assuming you have icons imported
+import { HeartIcon, ChatIcon, TrashIcon } from '@heroicons/react/outline'; // Assuming you have icons imported
 
 const ReactionsManagement = () => {
   const [likedVideoPosts, setLikedVideoPosts] = useState([]);
@@ -83,43 +83,44 @@ const ReactionsManagement = () => {
         {loading ? (
           <div className="text-lg text-gray-500">Loading...</div>
         ) : (
-          <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-6">
-            {/* Liked Video Posts Section */}
+          <div>
             <div>
               <h2 className="text-2xl font-semibold mb-4 flex items-center">
                 <HeartIcon className="h-6 w-6 mr-2 text-red-500" />
                 Liked Video Posts
               </h2>
-              {likedVideoPosts.length > 0 ? (
-                <div className="grid grid-cols-1 gap-4">
-                  {likedVideoPosts.map((videoPost) => (
-                    <div key={videoPost.videoPostId} className="bg-white p-4 rounded-lg shadow-md border border-gray-200">
-                      <UserLikes videoPost={videoPost} onUnlike={handleUnlike} />
-                    </div>
-                  ))}
-                </div>
-              ) : (
-                <p className="text-lg text-gray-500">No liked video posts found.</p>
-              )}
+              <div>
+                {likedVideoPosts.length > 0 ? (
+                  <ul className="divide-y divide-gray-200">
+                    {likedVideoPosts.map((videoPost, index) => (
+                      <li key={videoPost.videoPostId} className="py-4">
+                        <UserLikes videoPost={videoPost} onUnlike={handleUnlike} />
+                      </li>
+                    ))}
+                  </ul>
+                ) : (
+                  <p className="text-lg text-gray-500">No liked video posts found.</p>
+                )}
+              </div>
             </div>
-
-            {/* User Comments Section */}
             <div>
               <h2 className="text-2xl font-semibold mb-4 flex items-center">
                 <ChatIcon className="h-6 w-6 mr-2 text-blue-500" />
                 User Comments
               </h2>
-              {userComments.length > 0 ? (
-                <div className="grid grid-cols-1 gap-4">
-                  {userComments.map((comment) => (
-                    <div key={comment.commentId} className="bg-white p-4 rounded-lg shadow-md border border-gray-200">
-                      <UserComments comment={comment} />
-                    </div>
-                  ))}
-                </div>
-              ) : (
-                <p className="text-lg text-gray-500">No comments found.</p>
-              )}
+              <div>
+                {userComments.length > 0 ? (
+                  <ul className="divide-y divide-gray-200">
+                    {userComments.map((comment, index) => (
+                      <li key={comment.commentId} className="py-4">
+                        <UserComments comment={comment} />
+                      </li>
+                    ))}
+                  </ul>
+                ) : (
+                  <p className="text-lg text-gray-500">No comments found.</p>
+                )}
+              </div>
             </div>
           </div>
         )}
