@@ -84,95 +84,53 @@ class CategoryManagement extends Component {
 
     handleCategoryAdded = (newCategory) => {
         this.setState(prevState => ({
-            categories: [...prevState.categories, newCategory]
+            categories: [...prevState.categories, newCategory],
+            addingCategory: false // Close the modal after adding
         }));
     }
 
-//     render() {
-//         const { categories, editingCategory, addingCategory } = this.state;
-
-//         return (
-//             <div className="container mx-auto mt-8">
-//                 <div className="mb-4 flex justify-between">
-//                     <Link to="#" className="bg-blue-500 hover:bg-blue-700 text-white font-bold py-2 px-4 rounded" onClick={() => this.setState({ addingCategory: true })}>
-//                         Add Category
-//                     </Link>
-//                 </div>
-//                 {addingCategory && <AddCategoryModal onCategoryAdded={this.handleCategoryAdded} />}
-//                 <table className="border-collapse border w-auto">
-//                     <thead>
-//                         <tr>
-//                             <th className="border px-2 py-2">Name</th>
-//                             <th className="border px-2 py-2">Short Description</th>
-//                             <th className="border px-2 py-2">Image</th>
-//                             <th className="border px-2 py-2">Edit</th>
-//                             <th className="border px-2 py-2">Delete</th>
-//                         </tr>
-//                     </thead>
-//                     <tbody>
-//                         {categories.map(category => (
-//                             <tr key={category.id}>
-//                                 <td className="border px-2 py-2">{category.name}</td>
-//                                 <td className="border px-2 py-2">{category.shortDescription}</td>
-//                                 <td className="border px-2 py-2">
-//                                     <img src={category.imageUrl} alt={category.name} style={{ width: "100px", height: "auto" }} />
-//                                 </td>
-//                                 <td className="border px-2 py-2">
-//                                     <Tooltip content="Edit Category">
-//                                         <button className="inline-flex items-center px-3 py-1 border border-transparent text-sm leading-4 font-medium rounded-md text-white bg-blue-500 hover:bg-blue-700 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-blue-500" onClick={() => this.handleEditCategory(category)}>
-//                                             Edit
-//                                         </button>
-//                                     </Tooltip>
-//                                 </td>
-//                                 <td className="border px-2 py-2">
-//                                     <Tooltip content="Delete Category">
-//                                         <button className="inline-flex items-center px-3 py-1 border border-transparent text-sm leading-4 font-medium rounded-md text-white bg-red-500 hover:bg-red-700 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-red-500" onClick={() => this.handleDeleteCategory(category.id)}>
-//                                             Delete
-//                                         </button>
-//                                     </Tooltip>
-//                                 </td>
-
-//                             </tr>
-//                         ))}
-//                     </tbody>
-//                 </table>
-//                 {editingCategory && <EditCategoryModal category={editingCategory} onEdit={this.handleSaveCategory} />}
-//             </div>
-//         );
-//     }
-// }
-
-// export default CategoryManagement;
-
-
-
+    handleCancelAddCategory = () => {
+        this.setState({ addingCategory: false }); // Close the modal
+    }
 
     render() {
         const { categories, editingCategory, addingCategory } = this.state;
 
         return (
-            <div className="container mx-auto mt-8">
-                <div className="mb-4 flex justify-between">
-                    <AddCategoryButton onClick={() => this.setState({ addingCategory: true })} />
+            <div>
+                {/* Background overlay */}
+                {addingCategory && (
+                    <div className="fixed inset-0 z-50 overflow-auto bg-gray-800 bg-opacity-50 flex justify-center items-center">
+                        {/* Modal content */}
+                        <div className="bg-white w-full max-w-md p-8 rounded shadow-lg">
+                            {/* Category Form */}
+                            <CategoryForm onSubmit={this.handleCategoryAdded} onCancel={this.handleCancelAddCategory} />
+                        </div>
+                    </div>
+                )}
+
+                <div className="container mx-auto mt-8">
+                    <div className="mb-4 flex justify-between">
+                        <AddCategoryButton onClick={() => this.setState({ addingCategory: true })} />
+                    </div>
+                    <table className="border-collapse border w-auto">
+                        <thead>
+                            <tr>
+                                <th className="border px-2 py-2">Name</th>
+                                <th className="border px-2 py-2">Short Description</th>
+                                <th className="border px-2 py-2">Image</th>
+                                <th className="border px-2 py-2">Edit</th>
+                                <th className="border px-2 py-2">Delete</th>
+                            </tr>
+                        </thead>
+                        <CategoryList
+                            categories={categories}
+                            handleEditCategory={this.handleEditCategory}
+                            handleDeleteCategory={this.handleDeleteCategory}
+                        />
+                    </table>
+                    {editingCategory && <EditCategoryModal category={editingCategory} onEdit={this.handleSaveCategory} />}
                 </div>
-                {addingCategory && <CategoryForm onSubmit={this.handleCategoryAdded} />}
-                <table className="border-collapse border w-auto">
-                    <thead>
-                        <tr>
-                            <th className="border px-2 py-2">Name</th>
-                            <th className="border px-2 py-2">Short Description</th>
-                            <th className="border px-2 py-2">Image</th>
-                            <th className="border px-2 py-2">Edit</th>
-                            <th className="border px-2 py-2">Delete</th>
-                        </tr>
-                    </thead>
-                    <CategoryList
-                        categories={categories}
-                        handleEditCategory={this.handleEditCategory}
-                        handleDeleteCategory={this.handleDeleteCategory}
-                    />
-                </table>
-                {editingCategory && <EditCategoryModal category={editingCategory} onEdit={this.handleSaveCategory} />}
             </div>
         );
     }
