@@ -6,7 +6,6 @@ class AddVideoPostModal extends Component {
         this.state = {
             title: "",
             shortDescription: "",
-            content: "",
             imageUrl: "",
             videoUrl: "",
             publishedDate: "",
@@ -35,12 +34,11 @@ class AddVideoPostModal extends Component {
 
     handleSubmit = () => {
         const { onCreate } = this.props;
-        const { title, shortDescription, content, imageUrl, videoUrl, publishedDate, publisher, selectedCategories } = this.state;
+        const { title, shortDescription, imageUrl, videoUrl, publishedDate, publisher, selectedCategories } = this.state;
 
         const newVideoPostData = {
             title,
             shortDescription,
-            content,
             imageUrl,
             videoUrl,
             publishedDate,
@@ -59,7 +57,6 @@ class AddVideoPostModal extends Component {
                 <div className="relative p-8 bg-white w-full max-w-md m-auto rounded shadow-lg">
                     <input className="mb-4 px-3 py-2 border border-gray-300 rounded w-full" type="text" name="title" placeholder="Title" onChange={this.handleInputChange} />
                     <input className="mb-4 px-3 py-2 border border-gray-300 rounded w-full" type="text" name="shortDescription" placeholder="Short Description" onChange={this.handleInputChange} />
-                    <textarea className="mb-4 px-3 py-2 border border-gray-300 rounded w-full" name="content" placeholder="Content" onChange={this.handleInputChange} />
 
                     <input className="mb-4 px-3 py-2 border border-gray-300 rounded w-full" type="text" name="imageUrl" placeholder="Image URL" onChange={this.handleInputChange} />
                     <input className="mb-4 px-3 py-2 border border-gray-300 rounded w-full" type="text" name="videoUrl" placeholder="Video URL" onChange={this.handleInputChange} />

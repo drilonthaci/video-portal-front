@@ -5,7 +5,6 @@ const VideoPostItem = ({ videoPost, maxLength, onDelete }) => {
         <tr>
             <td className="border px-2 py-2">{videoPost.title}</td>
             <td className="border px-2 py-2">{videoPost.shortDescription.substring(0, maxLength)}</td>
-            <td className="border px-2 py-2">{videoPost.content.substring(0, maxLength)}</td>
             <td className="border px-2 py-2">
                 <img src={videoPost.imageUrl} alt={videoPost.title} style={{ width: "100px", height: "auto" }} />
             </td>

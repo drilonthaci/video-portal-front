@@ -102,10 +102,10 @@ class VideoPostsList extends Component {
             });
     }
 
-    truncateContent(content, maxLength) {
-        if (content.length <= maxLength) return content;
-        return content.substring(0, maxLength) + '...';
-    }
+    // truncateContent(content, maxLength) {
+    //     if (content.length <= maxLength) return content;
+    //     return content.substring(0, maxLength) + '...';
+    // }
 
     render() {
         const { videoPosts, isAddModalOpen, categories } = this.state;
@@ -130,7 +130,6 @@ class VideoPostsList extends Component {
                         <tr>
                             <th className="border px-2 py-2">Title</th>
                             <th className="border px-2 py-2">Description</th>
-                            <th className="border px-2 py-2">Content</th>
                             <th className="border px-2 py-2">Image</th>
                             <th className="border px-2 py-2">Video</th>
                             <th className="border px-2 py-2">Published Date</th>
